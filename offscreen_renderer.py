@@ -39,7 +39,7 @@ code_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(code_path)
 import numpy as np
 from PIL import Image
-import cv2
+#import cv2
 import time
 import trimesh
 import pyrender

@@ -34,7 +34,7 @@
 #
 
 
-import open3d as o3d
+#import open3d as o3d
 import os,sys,gc
 import glob
 dir_path = os.path.dirname(os.path.realpath(__file__))

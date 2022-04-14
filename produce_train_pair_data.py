@@ -35,19 +35,19 @@
 
 
 
-import open3d as o3d
-import sys,shutil,pickle,trimesh
+#import open3d as o3d
+import sys,shutil,pickle#,trimesh
 import os
 from scipy import spatial
 import argparse
-import torch
+#import torch
 import numpy as np
 import yaml
 from offscreen_renderer import *
 from Utils import *
 import time
 import numpy as np
-import cv2
+#import cv2
 from PIL import Image
 import copy
 import glob
@@ -150,12 +150,12 @@ def completeBlender():
   data_folder = f'{code_dir}/generated_data_pair/'
   os.system(f'rm -rf {data_folder} && mkdir -p {data_folder}')
 
-  dataset_info_dir = f'{code_dir}/dataset_info.yml'
+  dataset_info_dir = f'{code_dir}/dataset_info_singularity.yml'
   with open(dataset_info_dir, 'r') as ff:
     dataset_info = yaml.safe_load(ff)
   if 'object_width' not in dataset_info:
     print('Computing object width')
-    mesh = trimesh.load(dataset_info['models'][0]['model_path'])
+    mesh = trimesh.load(dataset_info['models'][0]['model_path'].replace('.ply','.obj'))
     model_3d = mesh.vertices
     object_max_width = compute_cloud_diameter(model_3d) * 1000
     bounding_box = dataset_info['boundingbox']
@@ -184,7 +184,7 @@ def completeBlender():
 
   producer = ProducerPurturb(dataset_info)
   code_dir = os.path.dirname(os.path.realpath(__file__))
-  rgb_files = sorted(glob.glob(f'{code_dir}/generated_data/*rgb.png'))
+  rgb_files = sorted(glob.glob(f'{code_dir}/generated_data/1/*rgb.png'))
   assert len(rgb_files)>0
   print('len(rgb_files): ',len(rgb_files))
 

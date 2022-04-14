@@ -34,7 +34,7 @@
 #
 
 
-import open3d as o3d
+#import open3d as o3d
 import sys,shutil
 import os
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -53,7 +53,7 @@ import yaml
 import glob
 import random
 from data_augmentation import *
-with open(dir_path+'/config.yml', 'r') as ff:
+with open(dir_path+'/config_singularity.yml', 'r') as ff:
 	config = yaml.safe_load(ff)
 
 

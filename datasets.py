@@ -72,7 +72,8 @@ class TrackDataset(Dataset):
 		print('#dataset:',self.__len__())
 
 		self.trans_normalizer = trans_normalizer
-		self.rot_normalizer = rot_normalizer    # 30*np.pi/180 for YCBInEOAT
+		#self.rot_normalizer = rot_normalizer    # 30*np.pi/180 for YCBInEOAT
+		self.rot_normalizer = 30*np.pi/180
 		print("self.trans_normalizer={}, self.rot_normalizer={}".format(self.trans_normalizer,self.rot_normalizer))
 
 

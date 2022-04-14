@@ -262,9 +262,10 @@ def get_dynamic_objects():
   return obs
 
 
-def generate():
+def generate(job_id):
+  t0 = time.time()
   code_dir = os.path.dirname(os.path.realpath(__file__))
-  dataset_info_dir = f"{code_dir}/dataset_info.yml"
+  dataset_info_dir = f"{code_dir}/dataset_info_singularity.yml"
   with open(dataset_info_dir,'r') as ff:
     dataset_info = yaml.safe_load(ff)
 
@@ -277,7 +278,7 @@ def generate():
   zmax = dataset_info['blender']['range_z'][1]
 
   code_dir = os.path.dirname(os.path.realpath(__file__))
-  out_dir = f'{code_dir}/generated_data/'
+  out_dir = f'{code_dir}/generated_data/'+job_id+"/"
 
   print('Using: {}'.format(dataset_info_dir))
   os.system(f'rm -rf {out_dir} && mkdir -p {out_dir}')
@@ -297,7 +298,11 @@ def generate():
   texture_files = []
   print('Collecting texture files...')
   for folder in texture_folders:
+    print("processing folder:", folder)
+    t1 = time.time()
     texture_files += glob.glob(folder,recursive=True)
+    print("Done in", time.time() - t1)
+    print("Total:", len(texture_files))
 
   texture_files.sort()
   assert len(texture_files)>0
@@ -334,6 +339,7 @@ def generate():
 
   count = 0
   while count<num_images:
+    t_im = time.time()
     print('>>>>>>>>>>>>>>>>>>>>>>>>>> {}/{}'.format(count,num_images))
     reset(dataset_info)
     light_num = np.random.randint(0,dataset_info['blender']['max_lamp_num']+1)
@@ -383,17 +389,20 @@ def generate():
     poses_in_world = np.array(poses_in_world)
     np.savez(out_dir+'/%07dposes_in_world.npz'%(count), class_ids=class_ids, poses_in_world=poses_in_world, blendercam_in_world=blendercam_in_world,K=K)
 
+    print("Finished 1 image in", time.time() - t_im)
     count += 1
 
 
   print('Finished {}'.format(out_dir))
-
+  print("in ", time.time() - t0)
 
 
 
 
 if __name__=='__main__':
-  generate()
+  print("dataset generator received args:")
+  print(sys.argv)
+  generate(sys.argv[-1])
 
 
 
