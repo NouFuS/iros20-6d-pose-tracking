@@ -34,8 +34,8 @@
 #
 
 import os, sys, time
-import open3d as o3d
-import cv2
+#import open3d as o3d
+#import cv2
 from PIL import Image
 import numpy as np
 sys.path.append('/../')
@@ -369,6 +369,7 @@ def normalize_rotation_matrix(R):
 
 
 def random_gaussian_magnitude(max_T, max_R):
+  import cv2
   direction_T = random_direction()
   while 1:
     magn_T = np.random.normal(0,max_T)
@@ -452,6 +453,7 @@ def compute_obj_max_width(model_cloud):
 
 
 def fill_depth(depth,max_depth=2.0,extrapolate=False,blur_type='bilateral'):
+  import cv2
   '''
   @depth: meters
   '''
