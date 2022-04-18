@@ -317,6 +317,7 @@ def compute_bbox(pose, K, scale_size=230, scale=(1, 1, 1)):
 
 
 def crop_bbox(color, depth, boundingbox, output_size=(100, 100), seg=None):
+  import cv2
   left = np.min(boundingbox[:, 1])
   right = np.max(boundingbox[:, 1])
   top = np.min(boundingbox[:, 0])
