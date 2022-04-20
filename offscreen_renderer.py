@@ -43,7 +43,8 @@ from PIL import Image
 import time
 import trimesh
 import pyrender
-
+os.environ['PYOPENGL_PLATFORM'] = 'egl'
+os.environ['DISPLAY'] = ':99.0'
 
 class Renderer:
 	def __init__(self,model_paths, cam_K, H,W):

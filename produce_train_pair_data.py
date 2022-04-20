@@ -38,7 +38,7 @@
 #import open3d as o3d
 import sys,shutil,pickle#,trimesh
 import os
-from scipy import spatial
+#from scipy import spatial
 import argparse
 #import torch
 import numpy as np
@@ -147,7 +147,8 @@ def completeBlender():
   '''
   class_id = 0
   code_dir = os.path.dirname(os.path.realpath(__file__))
-  data_folder = f'{code_dir}/generated_data_pair/'
+  data_folder = "/home/qb26/scratch60/generated_data_pair_2/"
+  #data_folder = f'{code_dir}/generated_data_pair/'
   os.system(f'rm -rf {data_folder} && mkdir -p {data_folder}')
 
   dataset_info_dir = f'{code_dir}/dataset_info_singularity.yml'
@@ -163,7 +164,8 @@ def completeBlender():
     object_width = object_max_width + with_add
     dataset_info['object_width'] = float(object_width)
     print('object_width=',object_width)
-    with open(f'{data_folder}/dataset_info.yml', 'w') as ff:
+    #with open(f'{data_folder}/dataset_info.yml', 'w') as ff:
+    with open(f'{data_folder}/dataset_info_singularity.yml', 'w') as ff:
       yaml.dump(dataset_info, ff)
 
   cam_K = np.array([[dataset_info['camera']['focalX'], 0, dataset_info['camera']['centerX']],
@@ -184,7 +186,8 @@ def completeBlender():
 
   producer = ProducerPurturb(dataset_info)
   code_dir = os.path.dirname(os.path.realpath(__file__))
-  rgb_files = sorted(glob.glob(f'{code_dir}/generated_data/1/*rgb.png'))
+  #rgb_files = sorted(glob.glob(f'{code_dir}/generated_data/1/*rgb.png'))
+  rgb_files = sorted(glob.glob('/home/qb26/scratch60/_badScale_aggregated_data/*rgb.png'))
   assert len(rgb_files)>0
   print('len(rgb_files): ',len(rgb_files))
 
@@ -192,16 +195,18 @@ def completeBlender():
     if i%100==0:
       print('complete pair data class={}:  {}/{}'.format(class_id,i,len(rgb_files)))
     rgb_file = rgb_files[i]
-    meta = np.load(rgb_file.replace('rgb.png','poses_in_world.npz'))
-    class_ids = meta['class_ids']
-    poses_in_world = meta['poses_in_world']
-    blendercam_in_world = meta['blendercam_in_world']
-    pos = np.where(class_ids==class_id)
-    B_in_cam = np.linalg.inv(cvcam_in_blendercam).dot(np.linalg.inv(blendercam_in_world).dot(poses_in_world[pos,:,:].reshape(4,4)))
+    try: # Skip to next datapoint if there is a file issue
+      meta = np.load(rgb_file.replace('rgb.png','poses_in_world.npz'))
+      class_ids = meta['class_ids']
+      poses_in_world = meta['poses_in_world']
+      blendercam_in_world = meta['blendercam_in_world']
+      pos = np.where(class_ids==class_id)
+      B_in_cam = np.linalg.inv(cvcam_in_blendercam).dot(np.linalg.inv(blendercam_in_world).dot(poses_in_world[pos,:,:].reshape(4,4)))
 
-    current_depth = cv2.imread(rgb_file.replace('rgb','depth'),cv2.IMREAD_UNCHANGED)
-    current_seg = cv2.imread(rgb_file.replace('rgb','seg'), cv2.IMREAD_UNCHANGED).astype(np.uint8)
-
+      current_depth = cv2.imread(rgb_file.replace('rgb','depth'),cv2.IMREAD_UNCHANGED)
+      current_seg = cv2.imread(rgb_file.replace('rgb','seg'), cv2.IMREAD_UNCHANGED).astype(np.uint8)
+    except:
+      continue
     if len(current_seg.shape)==3:
       current_seg = current_seg[:,:,0]
     if np.sum(current_seg==class_id)<100:

@@ -14,7 +14,7 @@ loss_weights:
   trans: 1
   rot: 1
 
-data_path: ./generated_data_pair/train_data_blender_DR
-validation_path: ./generated_data_pair/validation_data_blender_DR
-batch_size: 15
+data_path: /home/qb26/scratch60/generated_data_pair/train_data_blender_DR
+validation_path: /home/qb26/scratch60/generated_data_pair/validation_data_blender_DR
+batch_size: 200
 n_workers: 20
