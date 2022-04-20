@@ -33,12 +33,11 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import os, sys, time
+import os, sys, time, string, random
 code_dir = os.path.dirname(os.path.realpath(__file__))
 
 
 if __name__=='__main__':
-  print("Received arg ID:", sys.argv[1])
   if os.environ.get('BLENDER_PATH') == None:
     print("Please set BLENDER_PATH in bashrc!")
     sys.exit()
@@ -48,7 +47,12 @@ if __name__=='__main__':
   blender_start_file = f'{code_dir}/1.blend'
 
   try:
-    render_cmd = '{} {} -b -P {} '.format(g_blender_executable_path, blender_start_file, code_dir+'/blender_dataset_generator.py '+sys.argv[1])
+    arg = sys.argv[1]
+    if arg == "-1":
+      id_folder = ''.join(random.choices(string.digits, k=7))
+    else:
+      id_folder = arg
+    render_cmd = '{} {} -b -P {} '.format(g_blender_executable_path, blender_start_file, code_dir+'/blender_dataset_generator.py' + " " + id_folder)
     print(render_cmd)
     os.system(render_cmd)
   except:

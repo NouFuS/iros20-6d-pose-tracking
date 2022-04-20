@@ -278,10 +278,11 @@ def generate(job_id):
   zmax = dataset_info['blender']['range_z'][1]
 
   code_dir = os.path.dirname(os.path.realpath(__file__))
-  out_dir = f'{code_dir}/generated_data/'+job_id+"/"
+  #out_dir_final = f'{code_dir}/generated_data/'+str(job_id)+'/'
+  out_dir_final = '/home/qb26/scratch60/generated_data/'+str(job_id)+'/'
 
   print('Using: {}'.format(dataset_info_dir))
-  os.system(f'rm -rf {out_dir} && mkdir -p {out_dir}')
+  os.system(f'rm -rf {out_dir_final} && mkdir -p {out_dir_final}')
 
   H = dataset_info['camera']['height']
   W = dataset_info['camera']['width']
@@ -297,13 +298,12 @@ def generate(job_id):
   texture_folders = dataset_info['texture_folders']
   texture_files = []
   print('Collecting texture files...')
+  print(texture_folders)
   for folder in texture_folders:
-    print("processing folder:", folder)
+    print("Working on:", folder)
     t1 = time.time()
     texture_files += glob.glob(folder,recursive=True)
-    print("Done in", time.time() - t1)
-    print("Total:", len(texture_files))
-
+    #print("texture files", texture_files)
   texture_files.sort()
   assert len(texture_files)>0
   print('#texture_files:',len(texture_files))
@@ -375,10 +375,10 @@ def generate(job_id):
       print('segB too small')
       continue
 
-    print("Saving to ",out_dir+'/%07drgb.png'%(count))
-    Image.fromarray(rgbB).save(out_dir+'/%07drgb.png'%(count), optimize=True)
-    cv2.imwrite(out_dir+'/%07ddepth.png'%(count),depthB.astype(np.uint16))
-    cv2.imwrite(out_dir+'/%07dseg.png'%(count),segB.astype(np.uint8))
+    print("Saving to ",out_dir_final+'/%07drgb.png'%(count))
+    Image.fromarray(rgbB).save(out_dir_final+'/%07drgb.png'%(count), optimize=True)
+    cv2.imwrite(out_dir_final+'/%07ddepth.png'%(count),depthB.astype(np.uint16))
+    cv2.imwrite(out_dir_final+'/%07dseg.png'%(count),segB.astype(np.uint8))
 
     bpy.context.scene.update()
     poses_in_world = []
@@ -387,21 +387,17 @@ def generate(job_id):
       ob_in_world = matrixToNumpyArray(ob.matrix_world)
       poses_in_world.append(ob_in_world)
     poses_in_world = np.array(poses_in_world)
-    np.savez(out_dir+'/%07dposes_in_world.npz'%(count), class_ids=class_ids, poses_in_world=poses_in_world, blendercam_in_world=blendercam_in_world,K=K)
+    np.savez(out_dir_final+'/%07dposes_in_world.npz'%(count), class_ids=class_ids, poses_in_world=poses_in_world, blendercam_in_world=blendercam_in_world,K=K)
 
     print("Finished 1 image in", time.time() - t_im)
     count += 1
 
 
-  print('Finished {}'.format(out_dir))
+  print('Finished {}'.format(out_dir_final))
   print("in ", time.time() - t0)
 
 
-
-
 if __name__=='__main__':
-  print("dataset generator received args:")
-  print(sys.argv)
   generate(sys.argv[-1])
 
 
