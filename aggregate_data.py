@@ -24,8 +24,8 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 import os, sys, glob, shutil
 from pprint import pprint
 
-# path = "/home/qb26/scratch60/generated_data/"
-path = "/home/qb26/scratch60/_badScale_generated_data/"
+path = "/home/qb26/scratch60/generated_data/"
+# path = "/home/qb26/scratch60/_badScale_generated_data/"
 
 all_folders = os.listdir(path)
 all_master_names = {}
@@ -48,7 +48,7 @@ for folder in all_folders:
 print("Total nb of datapoints:", total_data_points)
 
 print("*"*10, "Starting Copying")
-target_folder = "/home/qb26/scratch60/_badScale_aggregated_data/"
+target_folder = "/home/qb26/scratch60/aggregated_data_goodK/"
 if not os.path.exists(target_folder):
     os.mkdir(target_folder)
 

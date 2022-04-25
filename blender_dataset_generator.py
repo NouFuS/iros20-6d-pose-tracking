@@ -293,6 +293,7 @@ def generate(job_id):
   K[1,2] = dataset_info['camera']['centerY']
   print('K:\n',K)
   K[1,1] = K[0,0]
+
   setupCamera(W=dataset_info['camera']['width'],H=dataset_info['camera']['height'],K=K)
 
   texture_folders = dataset_info['texture_folders']
